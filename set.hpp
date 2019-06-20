@@ -313,33 +313,32 @@ private:
         delete v;
     }
 
-//    static Node* clone(Node* v, Node* p = nullptr) {
-//        if (!v)
-//            return v;
-//        Node* l = nullptr;
-//        Node* r = nullptr;
-//        try {
-//            l = clone(v->left, v);
-//            r = clone(v->right, v);
-//            return new Node{v->value, l, r, p, v->color};
-//        } catch (...) {
-//            clear(l);
-//            clear(r);
-//            throw;
-//        }
-//    }
+    static Node* clone(Node* v, Node* p = nullptr) {
+        if (!v)
+            return v;
+        Node* res = new Node{v->value, nullptr, nullptr, p, v->color};
+        try {
+            res->left = clone(v->left, res);
+            res->right = clone(v->right, res);
+            return res;
+        } catch (...) {
+            clear(res->left);
+            clear(res->right);
+            throw;
+        }
+    }
 
 public:
     Set() : _root(nullptr), _begin(nullptr), _size(0) {}
 
-    Set(const Set& src) : Set(src.begin(), src.end()) {
-//        _root = clone(src._root);
-//        _size = src._size;
-//        _begin = _root;
-//
-//        if (_begin)
-//            while (_begin->left)
-//                _begin = _begin->left;
+    Set(const Set& src) : Set() {
+        _root = clone(src._root);
+        _size = src._size;
+        _begin = _root;
+
+        if (_begin)
+            while (_begin->left)
+                _begin = _begin->left;
     }
 
     Set(Set&& src) : Set() {
