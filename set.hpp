@@ -356,8 +356,13 @@ public:
 
     template<typename IIt>
     Set(IIt first, IIt last) : Set() {
-        while (first != last)
-            insert(*first++);
+        try {
+            while (first != last)
+                insert(*first++);
+        } catch (...) {
+            clear();
+            throw;
+        }
     }
 
     Set(std::initializer_list<T> init) : Set(init.begin(), init.end()) {}
